@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת ניהול בקשות ציוד</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- קישור לקובץ העיצוב שיהיה באותה תיקייה -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- קישור לקובץ ה-JS הראשי. type="module" חיוני! -->
+    <script src="src/main.js" type="module" defer></script>
+</head>
+<body>
+    <header class="app-header">
+        <h1>מערכת ניהול בקשות ציוד</h1>
+        <!-- כאן יוצג שם המשתמש המחובר -->
+        <div id="user-display"></div>
+    </header>
+
+    <main id="app-root">
+        <!-- תוכן האפליקציה יטען לכאן באופן דינמי על ידי ה-JavaScript -->
+    </main>
+
+    <!-- מיכל עבור הודעות קופצות (Toasts) -->
+    <div id="toast-container"></div>
+
+    <!-- ========= TEMPLATES ========= -->
+    <!-- התבניות משמשות את ה-JS כדי ליצור אלמנטים חדשים -->
+
+    <!-- תבנית לדשבורד הראשי (מסך הבית) -->
+    <template id="dashboard-template">
+        <div class="dashboard-header">
+            <h2 id="dashboard-title"></h2>
+            <button id="new-request-btn" class="btn-primary">הגשת בקשה חדשה +</button>
+        </div>
+        <div class="dashboard-filters" id="dashboard-filters-container" style="display: none;">
+            <input type="search" id="search-input" placeholder="חיפוש לפי מספר, סיבה או מגיש...">
+            <select id="status-filter">
+                <option value="all">כל הסטטוסים</option>
+                <option value="ממתין">ממתין</option>
+                <option value="מאושר">מאושר</option>
+                <option value="נדחה">נדחה</option>
+                <option value="מאושר חלקית">מאושר חלקית</option>
+            </select>
+        </div>
+        <div class="requests-grid" id="requests-grid-container">
+            <!-- כאן יופיעו כרטיסי הבקשות -->
+        </div>
+    </template>
+
+    <!-- תבנית לכרטיסיית בקשה בודדת -->
+    <template id="request-card-template">
+        <div class="request-card" tabindex="0">
+            <div class="card-header">
+                <span class="request-id"></span>
+                <span class="request-status"></span>
+            </div>
+            <div class="card-body">
+                <p class="request-reason"></p>
+            </div>
+            <div class="card-footer">
+                <span class="request-author"></span>
+                <span class="request-date"></span>
+            </div>
+        </div>
+    </template>
+    
+    <!-- תבנית לחלון צף (Modal) עם פרטי הבקשה המלאים -->
+    <template id="request-modal-template">
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <button class="modal-close-btn" title="סגירה">&times;</button>
+                <div class="modal-header">
+                    <h3 class="modal-title"></h3>
+                    <p>מאת: <span class="modal-author"></span> | תאריך: <span class="modal-date"></span></p>
+                </div>
+                <div class="modal-body">
+                    <h4>סיבת הבקשה:</h4>
+                    <p class="modal-reason"></p>
+                    <h4>פריטים:</h4>
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th>שם הפריט</th>
+                                <th>כמות</th>
+                                <th>סטטוס</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="modal-actions" style="display: none;">
+                    <button class="btn-secondary" id="approve-all-btn">אשר הכל</button>
+                    <button class="btn-danger" id="reject-all-btn">דחה הכל</button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- תבנית לטופס יצירת בקשה חדשה -->
+    <template id="new-request-form-template">
+        <div class="form-container">
+            <h2>בקשת ציוד חדשה</h2>
+            <form id="new-request-form">
+                <div class="form-group">
+                    <label for="request-reason-input">סיבת הבקשה (חובה)</label>
+                    <textarea id="request-reason-input" rows="3" required placeholder="לדוגמה: הקמת עמדת עבודה לעובד חדש"></textarea>
+                </div>
+                <h3>פריטים</h3>
+                <div id="items-list"></div>
+                <button type="button" id="add-item-btn" class="btn-secondary">הוסף פריט +</button>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">שלח בקשה</button>
+                    <button type="button" id="cancel-btn" class="btn-tertiary">ביטול</button>
+                </div>
+            </form>
+        </div>
+    </template>
+</body>
+</html>

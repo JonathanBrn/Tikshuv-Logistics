@@ -1,0 +1,346 @@
+/* ======== הגדרות בסיס ומשתנים ======== */
+:root {
+    --color-bg-main: #001219;
+    --color-action-primary: #0A9396;
+    --color-bg-secondary: #F8F9FA;
+    --color-text-main: #001219;
+    --color-text-light: #FFFFFF;
+    
+    --status-pending: #E9D8A6;
+    --status-approved: #D1FAE5;
+    --status-rejected: #FEE2E2;
+    --status-partial: #FEF9C3; /* צהוב בהיר למאושר חלקית */
+    --color-danger: #e53e3e;
+    
+    --font-family-main: 'Inter', sans-serif;
+}
+
+body {
+    font-family: var(--font-family-main);
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-main);
+    margin: 0;
+    direction: rtl;
+}
+
+/* ======== Header & Navigation ======== */
+.app-header {
+    background-color: var(--color-bg-main);
+    color: var(--color-text-light);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.app-header h1 { 
+    margin: 0; 
+    font-size: 1.5rem; 
+}
+#user-display {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* ======== Main Content & Dashboard ======== */
+main { 
+    padding: 2rem; 
+    max-width: 1400px;
+    margin: 0 auto;
+}
+.dashboard-header {
+    display: flex; 
+    flex-wrap: wrap;
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+}
+.requests-grid {
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+    gap: 1.5rem;
+    min-height: 100px; /* גובה מינימלי להצגת הספינר */
+}
+
+/* ======== פילטרים ======== */
+.dashboard-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+.dashboard-filters input, .dashboard-filters select {
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-family: var(--font-family-main);
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+.dashboard-filters input[type="search"] {
+    flex-grow: 1;
+    min-width: 250px;
+}
+
+/* ======== כרטיסיית בקשה ======== */
+.request-card {
+    background-color: #FFFFFF; 
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07); 
+    padding: 1rem;
+    display: flex; 
+    flex-direction: column; 
+    gap: 0.75rem;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    opacity: 0; 
+    animation: fadeIn 0.5s forwards;
+}
+.request-card.clickable:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+    cursor: pointer;
+}
+.card-header, .card-footer {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    font-size: 0.85rem; 
+    color: #6c757d;
+}
+.request-id { 
+    font-weight: bold; 
+    color: var(--color-text-main); 
+}
+.request-status {
+    padding: 0.25rem 0.6rem; 
+    border-radius: 12px; 
+    font-weight: 500;
+}
+.request-status[data-status="ממתין"] { background-color: var(--status-pending); }
+.request-status[data-status="מאושר"] { background-color: var(--status-approved); }
+.request-status[data-status="נדחה"] { background-color: var(--status-rejected); }
+.request-status[data-status="מאושר חלקית"] { background-color: var(--status-partial); }
+
+.request-reason { 
+    margin: 0; 
+    overflow: hidden; 
+    display: -webkit-box; 
+    -webkit-box-orient: vertical; 
+    -webkit-line-clamp: 2; /* תמיכה בדפדפני WebKit */
+    line-clamp: 2; /* הוספת המאפיין הסטנדרטי - התיקון */
+}
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* ======== חלון צף (Modal) ======== */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 18, 25, 0.7); 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    z-index: 1000;
+    opacity: 0; 
+    animation: fadeIn 0.3s forwards;
+}
+.modal-content {
+    background: white; 
+    padding: 2rem; 
+    border-radius: 8px; 
+    width: 90%;
+    max-width: 600px; 
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+.modal-close-btn {
+    position: absolute; top: 1rem; left: 1rem; 
+    background: none; 
+    border: none;
+    font-size: 1.5rem; 
+    cursor: pointer;
+}
+.items-table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-top: 1rem; 
+}
+.items-table th, .items-table td { 
+    text-align: right; 
+    padding: 0.75rem; 
+    border-bottom: 1px solid #dee2e6; 
+}
+.items-table th { 
+    background-color: var(--color-bg-secondary); 
+}
+.items-table select {
+    padding: 0.25rem; 
+    border-radius: 4px; 
+    border: 1px solid #ced4da; 
+    width: 100%;
+    background-color: #fff;
+}
+.modal-actions {
+    margin-top: 1.5rem; 
+    padding-top: 1.5rem; 
+    border-top: 1px solid #dee2e6;
+    display: flex; 
+    gap: 1rem; 
+    justify-content: flex-end;
+}
+
+/* ======== טפסים וכפתורים ======== */
+.btn-primary, .btn-secondary, .btn-danger, .btn-tertiary {
+    border: none; 
+    padding: 0.75rem 1.5rem; 
+    border-radius: 5px; 
+    cursor: pointer;
+    font-size: 1rem; 
+    font-weight: 500; 
+    transition: background-color 0.2s;
+}
+.btn-primary { 
+    background-color: var(--color-action-primary); 
+    color: white; 
+}
+.btn-primary:hover { 
+    background-color: #087a7d; 
+}
+.btn-secondary { 
+    background-color: #e2e8f0; 
+    color: var(--color-text-main); 
+}
+.btn-secondary:hover { 
+    background-color: #cbd5e1; 
+}
+.btn-danger { 
+    background-color: var(--color-danger); 
+    color: white; 
+}
+.btn-danger:hover { 
+    background-color: #c53030; 
+}
+.btn-tertiary { 
+    background: none; 
+    color: #6c757d; 
+}
+
+.form-container {
+    max-width: 700px; 
+    margin: 0 auto; 
+    background: white; 
+    padding: 2rem;
+    border-radius: 8px; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+.form-group { 
+    margin-bottom: 1.5rem; 
+}
+.form-group label { 
+    display: block; 
+    margin-bottom: 0.5rem; 
+    font-weight: 500; 
+}
+.form-group input, .form-group textarea {
+    width: 100%; 
+    padding: 0.75rem; 
+    border: 1px solid #ced4da;
+    border-radius: 4px; 
+    font-family: var(--font-family-main); 
+    box-sizing: border-box;
+}
+#items-list .item-row {
+    display: flex; 
+    gap: 1rem; 
+    margin-bottom: 1rem; 
+    align-items: center;
+}
+#items-list .item-row input[type="text"] { 
+    flex-grow: 1; 
+}
+#items-list .item-row input[type="number"] { 
+    max-width: 80px; 
+}
+#items-list .item-row .remove-item-btn {
+    background: none; 
+    border: none; 
+    color: var(--color-danger); 
+    font-size: 1.5rem;
+    cursor: pointer; 
+    padding: 0; 
+    line-height: 1;
+}
+.form-actions { 
+    margin-top: 2rem; 
+    display: flex; 
+    gap: 1rem; 
+}
+
+/* ======== הודעות Toast ======== */
+#toast-container {
+    position: fixed; 
+    bottom: 20px; 
+    left: 20px; 
+    z-index: 2000;
+    display: flex; 
+    flex-direction: column; 
+    gap: 1rem;
+}
+.toast {
+    padding: 1rem 1.5rem; 
+    border-radius: 6px; 
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    opacity: 0;
+    transform: translateX(-100%);
+    animation: slideIn 0.3s forwards;
+}
+.toast.show { 
+    opacity: 1; 
+    transform: translateX(0); 
+}
+.toast.hide { 
+    animation: slideOut 0.3s forwards; 
+}
+.toast.success { 
+    background-color: #059669; 
+}
+.toast.error { 
+    background-color: var(--color-danger); 
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(-100%); opacity: 0; }
+}
+
+/* ======== ספינר טעינה ======== */
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    width: 100%;
+}
+
+.loader-spinner {
+    border: 5px solid #f3f3f3; /* Light grey */
+    border-top: 5px solid var(--color-action-primary); /* Turquoise */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
